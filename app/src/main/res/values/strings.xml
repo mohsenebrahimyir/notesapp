@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">دفترچه یادداشت</string>
+    <string name="recycle_bin">سطل زباله</string>
+    <string name="title_notes">عنوان نوشته</string>
+    <string name="detail_notes">توضیحات نوشته</string>
+    <string name="save">ذخیره</string>
+    <string name="cancel">منصرف</string>
+    <string name="title_notes_empty_error">عنوان نباید خالی باشد.</string>
+    <string name="save_notes_successful">نوشته با موفقیت ذخیره شد.</string>
+    <string name="save_notes_unsuccessful">نوشته با موفقیت ذخیره نشد.</string>
+</resources>
