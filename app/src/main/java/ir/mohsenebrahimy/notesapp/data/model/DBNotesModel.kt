@@ -1,4 +1,4 @@
-package ir.mohsenebrahimy.notesapp.db.model
+package ir.mohsenebrahimy.notesapp.data.model
 
 data class DBNotesModel (
     var id          : Int,

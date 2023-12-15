@@ -1,13 +1,14 @@
 package ir.mohsenebrahimy.notesapp.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import ir.mohsenebrahimy.notesapp.R
 import ir.mohsenebrahimy.notesapp.databinding.ActivityAddNotesBinding
-import ir.mohsenebrahimy.notesapp.db.DBHelper
-import ir.mohsenebrahimy.notesapp.db.dao.NotesDao
-import ir.mohsenebrahimy.notesapp.db.model.DBNotesModel
+import ir.mohsenebrahimy.notesapp.data.local.db.DBHelper
+import ir.mohsenebrahimy.notesapp.data.local.db.dao.NotesDao
+import ir.mohsenebrahimy.notesapp.data.model.DBNotesModel
+import saman.zamani.persiandate.PersianDate
 
 class AddNotesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddNotesBinding
@@ -19,32 +20,20 @@ class AddNotesActivity : AppCompatActivity() {
         val dao = NotesDao(DBHelper(this))
 
         binding.btnSave.setOnClickListener {
-            val title = binding.edtTitleNotes.text.toString()
+            val title  = binding.edtTitleNotes.text.toString()
             val detail = binding.edtDetailNotes.text.toString()
 
             if (title.isEmpty()) {
-                Toast.makeText(
-                    this,
-                    R.string.title_notes_empty_error,
-                    Toast.LENGTH_SHORT
-                ).show()
+                showText(R.string.title_notes_empty_error.toString())
             } else {
-                val notes = DBNotesModel(0, title, detail, "0", getDate())
+                val notes  = DBNotesModel(0, title, detail, DBHelper.FALSE_STATE, getDate())
                 val result = dao.saveNotes(notes)
 
                 if (result) {
-                    Toast.makeText(
-                        this,
-                        R.string.save_notes_successful,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showText(R.string.save_notes_successful.toString())
                     finish()
                 } else {
-                    Toast.makeText(
-                        this,
-                        R.string.save_notes_unsuccessful,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showText(R.string.save_notes_unsuccessful.toString())
                 }
             }
         }
@@ -53,6 +42,12 @@ class AddNotesActivity : AppCompatActivity() {
     }
 
     private fun getDate(): String {
-        return "test"
+        val pdate = PersianDate()
+//        Log.d("Timestamp", pdate.toString())
+        return pdate.toString()
+    }
+
+    private fun showText(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 }
