@@ -25,6 +25,26 @@ class NotesDao(
         return result > 0
     }
 
+    fun editNotes(id: Int, state: String): Boolean{
+        val database = db.writableDatabase
+        contentValues.clear()
+        contentValues.put(DBHelper.NOTES_DELETE_STATE, state)
+
+        val result = database.update(
+            DBHelper.NOTES_TABLE,
+            contentValues,
+            "${DBHelper.NOTES_ID} = ?",
+            arrayOf(id.toString())
+        )
+        database.close()
+
+        return result > 0
+    }
+
+    fun editNotes(id: Int, notes: DBNotesModel) : Boolean {
+        return false
+    }
+
     private fun setContentValues(notes: DBNotesModel) {
         contentValues.clear()
         contentValues.put(DBHelper.NOTES_TITLE, notes.title)
@@ -37,8 +57,8 @@ class NotesDao(
         val database = db.readableDatabase
         val query =
             "SELECT ${DBHelper.NOTES_ID}, ${DBHelper.NOTES_TITLE} " +
-            "FROM ${DBHelper.NOTES_TABLE} " +
-            "WHERE ${DBHelper.NOTES_DELETE_STATE} = ?"
+                    "FROM ${DBHelper.NOTES_TABLE} " +
+                    "WHERE ${DBHelper.NOTES_DELETE_STATE} = ?"
         cursor = database.rawQuery(query, arrayOf(value))
         val data = getDataForRecycler()
         cursor.close()

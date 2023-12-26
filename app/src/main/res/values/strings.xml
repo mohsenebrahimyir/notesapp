@@ -11,5 +11,7 @@
     <string name="remove_note">حذف یادداشت</string>
     <string name="do_you_want_move_note_to_recycle_bin">آیا می‌خواهید یادداشت به سطل زباله منتقل شود؟</string>
     <string name="yes">بله</string>
-    <string name="no">No</string>
+    <string name="no">خیر</string>
+    <string name="note_move_to_recycle_bin">یادداشت به سطل زباله منتقل شد</string>
+    <string name="operation_encountered_a_problem">عملیات با مشکل مواجه شد.</string>
 </resources>

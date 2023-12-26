@@ -24,16 +24,16 @@ class AddNotesActivity : AppCompatActivity() {
             val detail = binding.edtDetailNotes.text.toString()
 
             if (title.isEmpty()) {
-                showText(R.string.title_notes_empty_error.toString())
+                showText(resources.getString(R.string.title_notes_empty_error))
             } else {
                 val notes  = DBNotesModel(0, title, detail, DBHelper.FALSE_STATE, getDate())
                 val result = dao.saveNotes(notes)
 
                 if (result) {
-                    showText(R.string.save_notes_successful.toString())
+                    showText(resources.getString(R.string.save_notes_successful))
                     finish()
                 } else {
-                    showText(R.string.save_notes_unsuccessful.toString())
+                    showText(resources.getString(R.string.save_notes_unsuccessful))
                 }
             }
         }
