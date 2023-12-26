@@ -1,8 +1,12 @@
 package ir.mohsenebrahimy.notesapp.adapter.recycler
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.view.ContextThemeWrapper
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import ir.mohsenebrahimy.notesapp.R
 import ir.mohsenebrahimy.notesapp.data.model.RecyclerNotesModel
 import ir.mohsenebrahimy.notesapp.databinding.ListItemNotesBinding
 
@@ -24,7 +28,17 @@ class NotesAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun setData(data: RecyclerNotesModel) {
             binding.txtTitleNotes.text = data.title
-            binding.imgDeleteNotesRecycler.setOnClickListener {}
+            binding.imgDeleteNotesRecycler.setOnClickListener {
+                AlertDialog.Builder(ContextThemeWrapper(context, R.style.CustomAlertDialog))
+                    .setTitle(R.string.remove_note.toString())
+                    .setMessage(R.string.do_you_want_move_note_to_recycle_bin.toString())
+                    .setIcon(R.drawable.ic_delete)
+                    .setNegativeButton(R.string.yes.toString()) { _, _ ->
+                    }
+                    .setPositiveButton(R.string.no.toString()) { _, _ -> }
+                    .create()
+                    .show()
+            }
         }
     }
 
@@ -33,5 +47,9 @@ class NotesAdapter(
             allData = data
             notifyItemInserted(allData.size)
         }
+    }
+
+    private fun showText(text:String) {
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 }

@@ -8,4 +8,8 @@
     <string name="title_notes_empty_error">عنوان نباید خالی باشد.</string>
     <string name="save_notes_successful">نوشته با موفقیت ذخیره شد.</string>
     <string name="save_notes_unsuccessful">نوشته با موفقیت ذخیره نشد.</string>
+    <string name="remove_note">حذف یادداشت</string>
+    <string name="do_you_want_move_note_to_recycle_bin">آیا می‌خواهید یادداشت به سطل زباله منتقل شود؟</string>
+    <string name="yes">بله</string>
+    <string name="no">No</string>
 </resources>
