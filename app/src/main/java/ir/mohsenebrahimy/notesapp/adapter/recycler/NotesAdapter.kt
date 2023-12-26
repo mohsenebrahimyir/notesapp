@@ -2,6 +2,7 @@ package ir.mohsenebrahimy.notesapp.adapter.recycler
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
 import android.view.ContextThemeWrapper
 import android.view.ViewGroup
 import android.widget.Toast
@@ -11,6 +12,7 @@ import ir.mohsenebrahimy.notesapp.data.local.db.DBHelper
 import ir.mohsenebrahimy.notesapp.data.local.db.dao.NotesDao
 import ir.mohsenebrahimy.notesapp.data.model.RecyclerNotesModel
 import ir.mohsenebrahimy.notesapp.databinding.ListItemNotesBinding
+import ir.mohsenebrahimy.notesapp.ui.AddNotesActivity
 
 class NotesAdapter(
     private val context: Activity,
@@ -31,7 +33,6 @@ class NotesAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun setData(data: RecyclerNotesModel) {
             binding.txtTitleNotes.text = data.title
-
             binding.imgDeleteNotesRecycler.setOnClickListener {
                 AlertDialog.Builder(ContextThemeWrapper(context, R.style.CustomAlertDialog))
                     .setTitle(context.getString(R.string.remove_note))
@@ -50,6 +51,11 @@ class NotesAdapter(
                     .setPositiveButton(context.getString(R.string.no)) { _, _ -> }
                     .create()
                     .show()
+            }
+            binding.root.setOnClickListener {
+                val intent = Intent(context, AddNotesActivity::class.java)
+                intent.putExtra("notesId", data.id)
+                context.startActivity(intent)
             }
         }
     }

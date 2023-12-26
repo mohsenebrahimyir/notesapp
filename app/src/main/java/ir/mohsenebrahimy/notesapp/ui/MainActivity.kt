@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.imgAddNotes.setOnClickListener {
             val intent = Intent(this, AddNotesActivity::class.java)
+            intent.putExtra("newNotes", true)
             startActivity(intent)
         }
         initRecycler()

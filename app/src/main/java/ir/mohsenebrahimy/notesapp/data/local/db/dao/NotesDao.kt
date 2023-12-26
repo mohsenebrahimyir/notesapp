@@ -41,9 +41,7 @@ class NotesDao(
         return result > 0
     }
 
-    fun editNotes(id: Int, notes: DBNotesModel) : Boolean {
-        return false
-    }
+    fun editNotes(id: Int, notes: DBNotesModel) : Boolean { return false }
 
     private fun setContentValues(notes: DBNotesModel) {
         contentValues.clear()
@@ -82,6 +80,37 @@ class NotesDao(
         }
 
         return data
+    }
+
+    fun getNotesById(id: Int):DBNotesModel {
+        val database = db.readableDatabase
+        val query = "SELECT * FROM ${DBHelper.NOTES_TABLE} WHERE ${DBHelper.NOTES_ID} = ?"
+        cursor = database.rawQuery(query, arrayOf(id.toString()))
+        val data = getData()
+        cursor.close()
+        database.close()
+
+        return data
+    }
+
+    private fun getData(): DBNotesModel {
+        val data = DBNotesModel(0, "", "", "", "")
+
+        try {
+
+            if (cursor.moveToFirst()) {
+                data.id = cursor.getInt(getIndex(DBHelper.NOTES_ID))
+                data.title = cursor.getString(getIndex(DBHelper.NOTES_TITLE))
+                data.detail = cursor.getString(getIndex(DBHelper.NOTES_DETAIL))
+                data.deleteState = cursor.getString(getIndex(DBHelper.NOTES_DELETE_STATE))
+                data.date = cursor.getString(getIndex(DBHelper.NOTES_DATE))
+            }
+
+        } catch (e:Exception) {
+            Log.e("ERROR", e.message.toString())
+        }
+
+        return  data
     }
 
     private fun getIndex(name: String) = cursor.getColumnIndex(name)
