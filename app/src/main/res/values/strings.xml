@@ -8,10 +8,31 @@
     <string name="title_notes_empty_error">عنوان نباید خالی باشد.</string>
     <string name="save_notes_successful">نوشته با موفقیت ذخیره شد.</string>
     <string name="save_notes_unsuccessful">نوشته با موفقیت ذخیره نشد.</string>
+    <string name="restore_the_note">بازگردانی یادداشت</string>
     <string name="remove_note">حذف یادداشت</string>
-    <string name="do_you_want_move_note_to_recycle_bin">آیا می‌خواهید یادداشت به سطل زباله منتقل شود؟</string>
-    <string name="yes">بله</string>
-    <string name="no">خیر</string>
-    <string name="note_move_to_recycle_bin">یادداشت به سطل زباله منتقل شد</string>
-    <string name="operation_encountered_a_problem">عملیات با مشکل مواجه شد.</string>
+    <string name="remove_note_permanently">حذف یادداشت برای همیشه</string>
+    <string name="do_you_want_the_note_to_be_moved_the_recycle_bin">
+    آیا می‌خواهید یادداشت به سطل زباله منتقل شود؟
+    </string>
+    <string name="do_you_want_to_delete_the_note_permanently">
+    آیا می خواهید یادداشت برای همیشه حذف شود؟
+    </string>
+    <string name="do_you_want_the_note_to_be_moved_the_notes_pages">
+    آیا می‌خواهید یادداشت به صفحه یادداشت‌ها منتقل شود؟
+    </string>
+    <string name="yes">
+    بله
+    </string>
+    <string name="no">
+    خیر
+    </string>
+    <string name="the_note_was_moved_to_the_recycle_bin">
+    یادداشت به سطل زباله منتقل شد.
+    </string>
+    <string name="the_note_was_moved_to_the_notes_page">
+    یادداشت به صفحه یادداشت‌ها منتقل شد.
+    </string>
+    <string name="the_operation_encountered_a_problem">
+    عملیات با مشکل مواجه شد.
+    </string>
 </resources>

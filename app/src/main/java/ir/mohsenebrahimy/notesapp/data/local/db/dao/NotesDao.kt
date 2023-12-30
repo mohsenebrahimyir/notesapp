@@ -41,7 +41,19 @@ class NotesDao(
         return result > 0
     }
 
-    fun editNotes(id: Int, notes: DBNotesModel) : Boolean { return false }
+    fun editNotes(id: Int, notes: DBNotesModel) : Boolean {
+        val database = db.writableDatabase
+        setContentValues(notes)
+        val result = database.update(
+            DBHelper.NOTES_TABLE,
+            contentValues,
+            "${DBHelper.NOTES_ID} = ?",
+            arrayOf(id.toString())
+        )
+        database.close()
+
+        return result > 0
+    }
 
     private fun setContentValues(notes: DBNotesModel) {
         contentValues.clear()
@@ -114,4 +126,17 @@ class NotesDao(
     }
 
     private fun getIndex(name: String) = cursor.getColumnIndex(name)
+
+    fun deleteNotes(id: Int): Boolean{
+        val database = db.writableDatabase
+
+        val result = database.delete(
+            DBHelper.NOTES_TABLE,
+            "${DBHelper.NOTES_ID} = ?",
+            arrayOf(id.toString())
+        )
+        database.close()
+
+        return result > 0
+    }
 }
