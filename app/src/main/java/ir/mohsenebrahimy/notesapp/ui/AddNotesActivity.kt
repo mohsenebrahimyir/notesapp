@@ -4,11 +4,14 @@ import android.os.Bundle
 import android.text.Editable
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import ir.mohsenebrahimy.notesapp.R
+import ir.mohsenebrahimy.notesapp.data.local.db.DBHandler
+import ir.mohsenebrahimy.notesapp.data.model.NotesEntity
 import ir.mohsenebrahimy.notesapp.databinding.ActivityAddNotesBinding
-import ir.mohsenebrahimy.notesapp.data.local.db.DBHelper
-import ir.mohsenebrahimy.notesapp.data.local.db.dao.NotesDao
-import ir.mohsenebrahimy.notesapp.data.model.DBNotesModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import saman.zamani.persiandate.PersianDate
 
 class AddNotesActivity : AppCompatActivity() {
@@ -21,36 +24,52 @@ class AddNotesActivity : AppCompatActivity() {
         val id = intent.getIntExtra("notesId", 0)
         val type = intent.getBooleanExtra("newNotes", false)
 
-        val dao = NotesDao(DBHelper(this))
+        val db = DBHandler.getDatabase(this)
 
         if (type) {
             binding.txtDate.text = getDate()
         } else {
-            val notes = dao.getNotesById(id)
-            val edit  = Editable.Factory()
-            binding.edtTitleNotes.text  = edit.newEditable(notes.title)
-            binding.edtDetailNotes.text = edit.newEditable(notes.detail)
-            binding.txtDate.text = notes.date
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    val notes = db.noteDao().getNoteById(id)
+                    val edit = Editable.Factory()
+                    withContext(Dispatchers.Main) {
+                        binding.edtTitleNotes.text = edit.newEditable(notes.title)
+                        binding.edtDetailNotes.text = edit.newEditable(notes.detail)
+                        binding.txtDate.text = notes.date
+                    }
+                }
+            }
         }
 
         binding.btnSave.setOnClickListener {
-            val title  = binding.edtTitleNotes.text.toString()
+            val title = binding.edtTitleNotes.text.toString()
             val detail = binding.edtDetailNotes.text.toString()
 
             if (title.isEmpty()) {
                 showText(resources.getString(R.string.title_notes_empty_error))
             } else {
-                val notes  = DBNotesModel(0, title, detail, DBHelper.FALSE_STATE, getDate())
-                val result = if (type)
-                    dao.saveNotes(notes)
-                else
-                    dao.editNotes(id, notes)
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        val result = if (type) {
+                            val notes =
+                                NotesEntity(0, title, detail, DBHandler.FALSE_STATE, getDate())
+                            db.saveNotes(notes)
+                        } else {
+                            val notes =
+                                NotesEntity(id, title, detail, DBHandler.FALSE_STATE, getDate())
+                            db.editNotes(notes)
+                        }
 
-                if (result) {
-                    showText(resources.getString(R.string.save_notes_successful))
-                    finish()
-                } else {
-                    showText(resources.getString(R.string.save_notes_unsuccessful))
+                        withContext(Dispatchers.Main) {
+                            if (result) {
+                                showText(resources.getString(R.string.save_notes_successful))
+                                finish()
+                            } else {
+                                showText(resources.getString(R.string.save_notes_unsuccessful))
+                            }
+                        }
+                    }
                 }
             }
         }

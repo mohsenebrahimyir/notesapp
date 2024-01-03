@@ -6,13 +6,13 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ir.mohsenebrahimy.notesapp.adapter.recycler.NotesAdapter
-import ir.mohsenebrahimy.notesapp.databinding.ActivityMainBinding
-import ir.mohsenebrahimy.notesapp.data.local.db.DBHelper
+import ir.mohsenebrahimy.notesapp.data.local.db.DBHandler
 import ir.mohsenebrahimy.notesapp.data.local.db.dao.NotesDao
+import ir.mohsenebrahimy.notesapp.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class  MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var dao: NotesDao
+    private lateinit var db: NotesDao
     private lateinit var adapter: NotesAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,13 +35,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val data = dao.getNotesForRecycler(DBHelper.FALSE_STATE)
+        val data = db.getNotesForRecycler(DBHandler.FALSE_STATE)
         adapter.changeData(data)
     }
 
     private fun initRecycler() {
-        dao = NotesDao(DBHelper(this))
-        adapter = NotesAdapter(this, dao)
+        db = DBHandler.getDatabase(this)
+        adapter = NotesAdapter(this, db)
 
         binding.recyclerNotes.layoutManager =
             LinearLayoutManager(this, RecyclerView.VERTICAL, false)

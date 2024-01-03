@@ -8,16 +8,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import ir.mohsenebrahimy.notesapp.R
-import ir.mohsenebrahimy.notesapp.data.local.db.DBHelper
+import ir.mohsenebrahimy.notesapp.data.local.db.DBHandler
 import ir.mohsenebrahimy.notesapp.data.local.db.dao.NotesDao
 import ir.mohsenebrahimy.notesapp.data.model.RecyclerNotesModel
 import ir.mohsenebrahimy.notesapp.databinding.ListItemRecycleBinBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.withContext
 
 class RecycleBinAdapter(
     private val context: Context,
-    private val dao: NotesDao
+    private val db: NotesDao
 ) : RecyclerView.Adapter<RecycleBinAdapter.RecycleViewHolder>() {
-    private val allData = dao.getNotesForRecycler(DBHelper.TRUE_STATE)
+    private var allData = db.getNotesForRecycler(DBHandler.TRUE_STATE)
 
     override fun getItemCount(): Int = allData.size
 
@@ -38,10 +41,12 @@ class RecycleBinAdapter(
             binding.imgDeleteNotes.setOnClickListener {
                 AlertDialog.Builder(ContextThemeWrapper(context, R.style.CustomAlertDialog))
                     .setTitle(context.getString(R.string.remove_note))
-                    .setMessage(context.getString(R.string.do_you_want_to_delete_the_note_permanently))
+                    .setMessage(
+                        context.getString(R.string.do_you_want_to_delete_the_note_permanently)
+                    )
                     .setIcon(R.drawable.ic_delete_permanently)
                     .setNegativeButton(context.getString(R.string.yes)) { _, _ ->
-                        val result = dao.deleteNotes(data.id)
+                        val result = db.deleteNotes(data.id)
                         if (result) {
                             showText(context.getString(R.string.remove_note_permanently))
                             allData.removeAt(adapterPosition)
@@ -61,18 +66,29 @@ class RecycleBinAdapter(
                     .setMessage(context.getString(R.string.do_you_want_the_note_to_be_moved_the_notes_pages))
                     .setIcon(R.drawable.ic_delete_permanently)
                     .setNegativeButton(context.getString(R.string.yes)) { _, _ ->
-                        val result = dao.editNotes(data.id, DBHelper.FALSE_STATE)
-                        if (result) {
-                            showText(context.getString(R.string.restore_the_note))
-                            allData.removeAt(adapterPosition)
-                            notifyItemRemoved(adapterPosition)
-                        } else {
-                            showText(context.getString(R.string.the_operation_encountered_a_problem))
+                        lifecycleScope.launch {
+                            withContext(Dispatchers.IO) {
+                                val note = db.getNoteById(data.id)
+                                note.deleteState = DBHandler.FALSE_STATE
+                                val result = db.editNotes(note)
+
+                                withContext(Dispatchers.Main) {
+                                    if (result) {
+                                        showText(context.getString(R.string.restore_the_note))
+                                        allData.removeAt(adapterPosition)
+                                        notifyItemRemoved(adapterPosition)
+                                    } else {
+                                        showText(context.getString(R.string.the_operation_encountered_a_problem))
+                                    }
+                                }
+                            }
                         }
                     }
                     .setPositiveButton(context.getString(R.string.no)) { _, _ -> }
                     .create()
                     .show()
+
+
             }
 
         }
